@@ -24,7 +24,7 @@ LABEL description="FUTURE VIP Backend — Agentic AI Career Intelligence"
 # Runtime system deps
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq5 \
-    libpoppler-cpp0v5 \
+    libpoppler-cpp2 \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
