@@ -1,0 +1,270 @@
+# =============================================================================
+#  FUTURE VIP — .gitignore
+#  Covers: Python, Node.js, Docker, IDE files, secrets, OS files
+# =============================================================================
+
+# ─────────────────────────────────────────────────────
+#  SECRETS & ENVIRONMENT — NEVER COMMIT THESE
+# ─────────────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+.env.development.local
+.env.test.local
+.env.production.local
+backend/.env
+frontend/.env.local
+*.pem
+*.key
+*.cert
+*.crt
+secrets/
+credentials.json
+service-account*.json
+*_credentials.json
+
+# ─────────────────────────────────────────────────────
+#  Python
+# ─────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-link
+MANIFEST
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+.env.bak
+pyvenv.cfg
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+coverage.xml
+*.cover
+*.py,cover
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.ruff_cache/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# Type checking
+.pytype/
+pyrightconfig.json
+
+# ─────────────────────────────────────────────────────
+#  Node.js / Frontend
+# ─────────────────────────────────────────────────────
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-debug.log*
+.npm/
+.yarn/
+.pnp.*
+.yarnrc.yml
+
+# Build output
+dist/
+dist-ssr/
+build/
+out/
+.next/
+.nuxt/
+.output/
+.vuepress/dist
+
+# Vite
+*.local
+
+# Storybook
+storybook-static/
+
+# Testing
+coverage/
+.nyc_output/
+
+# TypeScript
+*.tsbuildinfo
+tsconfig.tsbuildinfo
+
+# ─────────────────────────────────────────────────────
+#  Docker
+# ─────────────────────────────────────────────────────
+# Do not ignore docker-compose files; they're version controlled
+.docker/
+docker-compose.override.yml
+
+# ─────────────────────────────────────────────────────
+#  Databases & Local Data
+# ─────────────────────────────────────────────────────
+*.sqlite
+*.sqlite3
+*.db
+*.db-shm
+*.db-wal
+postgres_data/
+redis_data/
+chroma_data/
+uploads/
+backups/
+data/
+
+# ─────────────────────────────────────────────────────
+#  Logs
+# ─────────────────────────────────────────────────────
+*.log
+*.log.*
+logs/
+log/
+npm-debug.log
+
+# ─────────────────────────────────────────────────────
+#  OS Generated Files
+# ─────────────────────────────────────────────────────
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+.AppleDouble
+.LSOverride
+Icon?
+.DocumentRevisions-V100
+.fseventsd
+.TemporaryItems
+
+# Windows
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.lnk
+Thumbs.db
+ehthumbs.db
+
+# Linux
+*~
+.nfs*
+
+# ─────────────────────────────────────────────────────
+#  IDEs & Editors
+# ─────────────────────────────────────────────────────
+# VSCode
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json.example
+
+# JetBrains (PyCharm, WebStorm, etc.)
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+.idea_modules/
+
+# Vim
+*.swp
+*.swo
+*.swn
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+Session.vim
+Sessionx.vim
+.netrwhist
+tags
+[._]*.un~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# Sublime Text
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+*.sublime-workspace
+*.sublime-project
+
+# ─────────────────────────────────────────────────────
+#  Alembic
+# ─────────────────────────────────────────────────────
+# Keep the migrations directory, but ignore local cache
+backend/app/db/migrations/versions/__pycache__/
+
+# ─────────────────────────────────────────────────────
+#  Temporary files
+# ─────────────────────────────────────────────────────
+*.tmp
+*.temp
+*.bak
+*.orig
+*.rej
+.temp/
+tmp/
+temp/
+
+# ─────────────────────────────────────────────────────
+#  AI / ML artifacts (large files)
+# ─────────────────────────────────────────────────────
+*.model
+*.pkl
+*.pickle
+*.h5
+*.hdf5
+*.bin
+*.safetensors
+models/
+checkpoints/
+
+# ─────────────────────────────────────────────────────
+#  Resume uploads (runtime data, not code)
+# ─────────────────────────────────────────────────────
+backend/uploads/
