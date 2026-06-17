@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt .
+COPY backend/requirements.txt .
 RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 
 
@@ -37,7 +37,7 @@ WORKDIR /app
 COPY --from=builder /install /usr/local
 
 # Copy application source
-COPY --chown=futurevip:futurevip . .
+COPY --chown=futurevip:futurevip backend/ .
 
 # Create directories for uploads and chroma data
 RUN mkdir -p /app/uploads /app/data/chroma && \
