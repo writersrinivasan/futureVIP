@@ -45,11 +45,11 @@ RUN mkdir -p /app/uploads /app/data/chroma && \
 
 USER futurevip
 
-# Health check
+# Health check — uses $PORT so Railway's dynamic port is respected
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-    CMD curl -f http://localhost:8000/health || exit 1
+    CMD curl -f "http://localhost:${PORT:-8000}/health" || exit 1
 
 EXPOSE 8000
 
-# Use the root-level main.py entrypoint
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "2"]
+# $PORT is injected by Railway (and other PaaS); falls back to 8000 locally
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000} --workers 1"]

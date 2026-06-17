@@ -423,7 +423,7 @@ export default function LandingPage() {
                   variant="outline"
                   size="lg"
                   leftIcon={<Github className="w-5 h-5" />}
-                  onClick={() => window.open('https://github.com', '_blank')}
+                  onClick={() => window.open('https://github.com/writersrinivasan/futureVIP', '_blank')}
                   className="text-base"
                 >
                   View on GitHub
