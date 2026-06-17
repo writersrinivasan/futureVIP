@@ -30,7 +30,7 @@ export default function NotificationsPage() {
     queryKey: ['notifications', activeTab],
     queryFn: () =>
       notificationsService.getNotifications(
-        activeTab === 'all' ? undefined : activeTab
+        activeTab === 'all' ? undefined : { type: activeTab }
       ),
     refetchInterval: 30000,
   })

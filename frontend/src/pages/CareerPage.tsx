@@ -1,12 +1,11 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
-import { TrendingUp, Wand2, ArrowRight, Target, AlertTriangle, ExternalLink } from 'lucide-react'
+import { TrendingUp, Wand2, ArrowRight, Target, AlertTriangle, ExternalLink, Star } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { careerService } from '@/services/career.service'
 import { useAuthStore } from '@/store/auth.store'
 import { RoadmapTimeline } from '@/components/career/RoadmapTimeline'
-import { SkillGraph } from '@/components/career/SkillGraph'
 import { CareerInsights } from '@/components/career/CareerInsights'
 import { Button } from '@/components/common/Button'
 import { Card } from '@/components/common/Card'
@@ -14,7 +13,7 @@ import { Badge } from '@/components/common/Badge'
 import { Progress } from '@/components/common/Progress'
 import { Skeleton } from '@/components/common/Skeleton'
 import { EmptyState } from '@/components/common/EmptyState'
-import type { CareerRoadmap } from '@/types'
+import type { CareerRoadmap, SkillGap } from '@/types'
 
 export default function CareerPage() {
   const queryClient = useQueryClient()
@@ -50,8 +49,14 @@ export default function CareerPage() {
     onError: () => toast.error('Failed to generate roadmap. Please try again.'),
   })
 
-  const skills = skillsData?.items ?? []
+  const skills = skillsData?.skills ?? []
+  const proficiency = skillsData?.proficiency ?? {}
   const insights = insightsData ?? []
+
+  // Derive progress from milestones since CareerRoadmap has no progress field
+  const progress = roadmap && roadmap.milestones.length > 0
+    ? Math.round((roadmap.milestones.filter((m) => m.is_completed).length / roadmap.milestones.length) * 100)
+    : 0
 
   return (
     <div className="space-y-6 pb-6">
@@ -152,38 +157,52 @@ export default function CareerPage() {
             <div className="flex flex-col sm:flex-row sm:items-center gap-4">
               <div className="flex items-center gap-3 flex-1">
                 <div className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-sm font-medium text-slate-300">
-                  {(roadmap as CareerRoadmap).current_role || 'Current Role'}
+                  {roadmap.current_role || 'Current Role'}
                 </div>
                 <ArrowRight className="w-4 h-4 text-slate-500 flex-shrink-0" />
                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo-500/10 border border-indigo-500/30 text-sm font-medium text-indigo-300">
                   <Target className="w-3.5 h-3.5" />
-                  {(roadmap as CareerRoadmap).target_role || 'Target Role'}
+                  {roadmap.target_role || 'Target Role'}
                 </div>
               </div>
               <div className="flex items-center gap-3 sm:text-right">
                 <div>
                   <p className="text-xs text-slate-500">Progress</p>
-                  <p className="text-base font-bold text-white">{(roadmap as CareerRoadmap).progress}%</p>
+                  <p className="text-base font-bold text-white">{progress}%</p>
                 </div>
                 <div className="w-20">
-                  <Progress value={(roadmap as CareerRoadmap).progress} color="primary" size="sm" />
+                  <Progress value={progress} variant="primary" size="sm" />
                 </div>
               </div>
             </div>
           </Card>
 
           {/* Roadmap timeline */}
-          <RoadmapTimeline roadmap={roadmap as CareerRoadmap} />
+          <RoadmapTimeline milestones={roadmap.milestones} />
 
-          {/* Two-column: SkillGraph + CareerInsights */}
+          {/* Two-column: Skills + CareerInsights */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div>
-              <h2 className="text-base font-semibold text-white mb-3">Your Skill Landscape</h2>
+              <h2 className="text-base font-semibold text-white mb-3">Your Skills</h2>
               {skills.length > 0 ? (
-                <SkillGraph skills={skills} />
+                <Card className="p-4 space-y-2">
+                  {skills.slice(0, 10).map((skill) => (
+                    <div key={skill} className="flex items-center justify-between gap-2">
+                      <span className="text-sm text-slate-300 truncate">{skill}</span>
+                      <div className="flex items-center gap-1">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star
+                            key={star}
+                            className={`w-3 h-3 ${(proficiency[skill] ?? 0) >= star * 2 ? 'text-amber-400 fill-amber-400' : 'text-slate-700'}`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </Card>
               ) : (
                 <Card className="p-6 flex items-center justify-center h-48">
-                  <p className="text-sm text-slate-500">Upload a resume to see your skill graph</p>
+                  <p className="text-sm text-slate-500">Upload a resume to see your skills</p>
                 </Card>
               )}
             </div>
@@ -202,17 +221,17 @@ export default function CareerPage() {
           </div>
 
           {/* Skill gaps */}
-          {(roadmap as CareerRoadmap).roadmap_data?.skill_gaps?.length > 0 && (
+          {roadmap.skill_gaps?.length > 0 && (
             <Card className="p-5">
               <h2 className="text-base font-semibold text-white mb-4 flex items-center gap-2">
                 <AlertTriangle className="w-4 h-4 text-amber-400" />
                 Skill Gaps to Address
               </h2>
               <div className="space-y-3">
-                {((roadmap as CareerRoadmap).roadmap_data?.skill_gaps ?? []).slice(0, 6).map((gap: { skill: string; priority: string; current_level: number; required_level: number; resources?: { title: string; url: string }[] }, idx: number) => (
+                {roadmap.skill_gaps.slice(0, 6).map((gap, idx) => (
                   <div key={idx} className="flex items-center justify-between gap-4 p-3 rounded-lg bg-white/5">
                     <div className="flex items-center gap-3 min-w-0">
-                      <Badge variant={gap.priority === 'high' ? 'danger' : gap.priority === 'medium' ? 'warning' : 'secondary'} size="sm">
+                      <Badge variant={gap.priority === 'high' ? 'danger' : gap.priority === 'medium' ? 'warning' : 'default'} size="sm">
                         {gap.priority}
                       </Badge>
                       <span className="text-sm font-medium text-slate-200 truncate">{gap.skill}</span>

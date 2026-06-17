@@ -8,37 +8,17 @@ interface JobMatchScoreProps {
 }
 
 export const JobMatchScore = ({ match }: JobMatchScoreProps) => {
-  const breakdowns = [
-    {
-      icon: Target,
-      label: 'Overall Match',
-      value: match.overall_score,
-      color: 'primary' as const,
-    },
-    {
-      icon: TrendingUp,
-      label: 'Semantic Match',
-      value: match.embedding_similarity * 100,
-      color: 'secondary' as const,
-    },
-    {
-      icon: Code,
-      label: 'Skill Overlap',
-      value: match.skill_overlap * 100,
-      color: 'accent' as const,
-    },
-    {
-      icon: Briefcase,
-      label: 'Experience Fit',
-      value: match.experience_alignment * 100,
-      color: 'success' as const,
-    },
-    {
-      icon: MapPin,
-      label: 'Location Match',
-      value: match.location_match * 100,
-      color: 'warning' as const,
-    },
+  const breakdowns: Array<{
+    icon: typeof Target
+    label: string
+    value: number
+    color: 'primary' | 'success' | 'warning' | 'danger' | 'gradient'
+  }> = [
+    { icon: Target,    label: 'Overall Match',   value: match.overall_score,               color: 'primary'  },
+    { icon: TrendingUp,label: 'Semantic Match',   value: match.embedding_similarity * 100,  color: 'gradient' },
+    { icon: Code,      label: 'Skill Overlap',    value: match.skill_overlap * 100,         color: 'success'  },
+    { icon: Briefcase, label: 'Experience Fit',   value: match.experience_alignment * 100,  color: 'warning'  },
+    { icon: MapPin,    label: 'Location Match',   value: match.location_match * 100,        color: 'primary'  },
   ]
 
   return (

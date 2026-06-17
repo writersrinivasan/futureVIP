@@ -150,7 +150,8 @@ export default function JobsPage() {
           >
             <JobFilters
               filters={filters}
-              onChange={(f) => { setFilters(f); setPage(1) }}
+              onFilterChange={(f) => { setFilters(f as JobSearchParams); setPage(1) }}
+              onClear={() => { setFilters({ page: 1, per_page: 20 }); setPage(1) }}
             />
           </motion.aside>
         )}
@@ -161,13 +162,11 @@ export default function JobsPage() {
             jobs={allJobs}
             matches={activeTab === 'matches' ? matches : undefined}
             isLoading={jobsQuery.isLoading}
-            page={page}
+            currentPage={page}
             totalPages={jobsQuery.data?.total_pages ?? 1}
             onPageChange={setPage}
             onApply={(jobId) => applyMutation.mutate(jobId)}
             onSave={(jobId) => saveMutation.mutate(jobId)}
-            onView={(jobId) => navigate(`/jobs/${jobId}`)}
-            matchMap={matchMap}
           />
         </div>
       </div>

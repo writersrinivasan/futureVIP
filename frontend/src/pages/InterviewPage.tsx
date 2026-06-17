@@ -65,9 +65,16 @@ export default function InterviewPage() {
 
   const answerMutation = useMutation({
     mutationFn: ({ sessionId, questionId, answer }: { sessionId: string; questionId: string; answer: string }) =>
-      interviewService.submitAnswer(sessionId, { question_id: questionId, answer }),
-    onSuccess: (updatedSession) => {
-      setActiveSession(updatedSession)
+      interviewService.submitAnswer(sessionId, questionId, answer),
+    onSuccess: (feedback) => {
+      // Merge feedback into the current question inside the active session
+      setActiveSession((prev) => {
+        if (!prev) return null
+        const updatedQuestions = prev.questions.map((q, idx) =>
+          idx === currentQuestionIdx ? { ...q, feedback, answer: 'submitted' } : q
+        )
+        return { ...prev, questions: updatedQuestions }
+      })
       setShowFeedback(true)
     },
     onError: () => toast.error('Failed to submit answer.'),
@@ -119,7 +126,7 @@ export default function InterviewPage() {
             <SessionHistory
               sessions={sessions}
               activeSessionId={activeSession?.id}
-              onResume={handleResumeSession}
+              onSelect={handleResumeSession}
             />
           )}
         </div>
@@ -165,7 +172,7 @@ export default function InterviewPage() {
                 </div>
                 <Progress
                   value={Math.round(((currentQuestionIdx + (answeredCurrent ? 1 : 0)) / activeSession.total_questions) * 100)}
-                  color="primary"
+                  variant="primary"
                   size="sm"
                 />
               </div>
@@ -178,8 +185,6 @@ export default function InterviewPage() {
 
               {!showFeedback ? (
                 <AnswerInput
-                  question={currentQuestion}
-                  existingAnswer={currentQuestion.answer}
                   isSubmitting={answerMutation.isPending}
                   onSubmit={(answer) =>
                     answerMutation.mutate({

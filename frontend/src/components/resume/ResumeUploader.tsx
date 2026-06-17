@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion'
-import { Upload, File, CheckCircle, XCircle, Loader2, CloudUpload } from 'lucide-react'
+import { Upload, File, CheckCircle, XCircle, Loader2, UploadCloud } from 'lucide-react'
 import { useResumeUpload } from '@/hooks/useResumeUpload'
 import { Progress } from '@/components/common/Progress'
 import { Button } from '@/components/common/Button'
@@ -36,6 +36,8 @@ export const ResumeUploader = ({ onSuccess, compact = false }: ResumeUploaderPro
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+          >
+          <div
             {...getRootProps()}
             className={`
               relative border-2 border-dashed rounded-2xl transition-all duration-300 cursor-pointer
@@ -56,7 +58,7 @@ export const ResumeUploader = ({ onSuccess, compact = false }: ResumeUploaderPro
                 `}
               >
                 {isDragActive ? (
-                  <CloudUpload className={compact ? 'w-6 h-6' : 'w-8 h-8'} />
+                  <UploadCloud className={compact ? 'w-6 h-6' : 'w-8 h-8'} />
                 ) : (
                   <Upload className={compact ? 'w-6 h-6' : 'w-8 h-8'} />
                 )}
@@ -90,6 +92,7 @@ export const ResumeUploader = ({ onSuccess, compact = false }: ResumeUploaderPro
                 <div className="absolute bottom-3 right-3 w-5 h-5 border-r-2 border-b-2 border-primary-500/30 rounded-br-lg" />
               </>
             )}
+          </div>
           </motion.div>
         )}
 
